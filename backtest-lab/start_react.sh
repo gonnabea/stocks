@@ -1,3 +1,3 @@
 #!/bin/sh
 cd ui
-npm start
+npm run dev
