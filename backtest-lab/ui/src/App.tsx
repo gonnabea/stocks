@@ -41,10 +41,17 @@ interface FormValues {
   apiParams: ApiParams;
 }
 
+interface TestResult {
+  ticker: string;
+  seed_money: number;
+  result_money: number;
+  test_period: string;
+}
+
 
 function App() {
   const [selectedTest, setSelectedTest] = useState(testList['larry_connors_rsi'].name);
-  const [testResult, setTestResult] = useState(null);
+  const [testResult, setTestResult] = useState<TestResult | null>(null);
 
 
   const defaultValues: DefaultValues<FormValues> = {
@@ -103,16 +110,25 @@ function App() {
           </select>
 
           {selectedTest === 'larry_connors_rsi' && 
-           <form onSubmit={(e) => {
+           <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
+
+            const form = e.currentTarget;
+        
             const values = {
-                ticker: e.target['ticker'].value,
-                first_rsi4: Number(e.target['first_rsi4'].value),
-                second_rsi4: Number(e.target['second_rsi4'].value),
-                start: e.target['start'].value,
-                end: e.target['end'].value,
-                sell_rsi4: Number(e.target['sell_rsi4'].value)
-            }
+              ticker: (form.elements.namedItem('ticker') as HTMLInputElement).value,
+              first_rsi4: Number(
+                (form.elements.namedItem('first_rsi4') as HTMLInputElement).value
+              ),
+              second_rsi4: Number(
+                (form.elements.namedItem('second_rsi4') as HTMLInputElement).value
+              ),
+              start: (form.elements.namedItem('start') as HTMLInputElement).value,
+              end: (form.elements.namedItem('end') as HTMLInputElement).value,
+              sell_rsi4: Number(
+                (form.elements.namedItem('sell_rsi4') as HTMLInputElement).value
+              ),
+            };
             console.log(values)
             onSubmit(values)
            }} className='w-full lg:w-[320px] justify-items-center'>
